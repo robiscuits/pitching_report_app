@@ -6,24 +6,35 @@
 #
 #    https://shiny.posit.co/
 #
-
 library(shiny)
 source("R/helpers.R")
 source("R/charts.R")
 source("R/tables.R")
 
+# Load data ONCE before server()
+pitches = load_data("data/CWS ML Analyst Dataset.csv") 
+
+# I want to order the dropdown by pitches thrown
+pitch_counts = pitches %>%
+  count(pitcher_name, name = "n_pitches") %>%
+  arrange(desc(n_pitches))
+
 # Define UI for application
 ui = fluidPage(
-    # Application title
-    titlePanel("Postgame Pitching Report"),
-
-    # Sidebar pitcher selection
-    sidebarLayout(
-      sidebarPanel(
-        selectInput("pitcher", "Choose Pitcher:", choices = NULL),
-        hr(),
-        helpText("Postgame pitching analysis dashboard.")
-      ),
+  # Application title
+  titlePanel("Postgame Pitching Report"),
+  
+  # Sidebar pitcher selection
+  sidebarLayout(
+    sidebarPanel(
+          selectInput(
+            "pitcher",
+            "Choose Pitcher:",
+            choices = pitch_counts$pitcher_name
+          ),
+      hr(),
+      helpText("Postgame pitching analysis dashboard.")
+    ),
     mainPanel(
       tabsetPanel(
         tabPanel("Movement", plotOutput("movement_plot")),
@@ -36,18 +47,8 @@ ui = fluidPage(
   )
 )
 
-
 server = function(input, output, session) {
-
-  pitches = load_pitch_data("data/CWS ML Analyst Dataset.csv")
   
-  # Populate dropdown
-  observe({
-    pitchers = sort(unique(pitches$pitcher_name))
-    updateSelectInput(session, "pitcher", choices = pitchers)
-  })
-  
-  # Filter for selected pitcher
   pitcher_data = reactive({
     req(input$pitcher)
     pitches %>% filter(pitcher_name == input$pitcher)
@@ -55,30 +56,34 @@ server = function(input, output, session) {
   
   # plot movement
   output$movement_plot = renderPlot({
+    req(nrow(pitcher_data()) > 0)
     plot_movement(pitcher_data())
   })
   
   # plot location
   output$location_plot = renderPlot({
+    req(nrow(pitcher_data()) > 0)
     plot_locations(pitcher_data())
   })
   
   # plot release
   output$release_plot = renderPlot({
+    req(nrow(pitcher_data()) > 0)
     plot_release(pitcher_data())
   })
   
   # Pitch characteristics table
   output$pitch_table = renderDT({
+    req(nrow(pitcher_data()) > 0)
     pitch_characteristics(pitcher_data())
   })
   
   # Efficacy metrics table
   output$eff_table = renderDT({
+    req(nrow(pitcher_data()) > 0)
     pitch_efficacy(pitcher_data())
   })
 }
-
 
 # Run the application 
 shinyApp(ui = ui, server = server)

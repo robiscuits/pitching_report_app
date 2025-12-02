@@ -41,7 +41,7 @@ pitch_efficacy = function(df) {
       strikes = sum(is_strike, na.rm = TRUE),
       whiffs  = sum(is_whiff, na.rm = TRUE),
       chases  = sum(is_chase, na.rm = TRUE),
-      called_strikes = sum(description == "called_strike"),
+      called_strikes = sum(description == "StrikeCalled", na.rm = TRUE),
       .groups = "drop"
     ) %>%
     mutate(
