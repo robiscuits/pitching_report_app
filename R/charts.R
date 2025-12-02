@@ -19,7 +19,7 @@ plot_locations = function(df) {
   ggplot(df, aes(plate_x, plate_z, color = pitch_type)) +
     geom_point(alpha = 0.5) +
     geom_rect(aes(
-      xmin = -0.85, xmax = 0.85,
+      xmin = -0.83, xmax = 0.83,
       ymin = 1.5, ymax = 3.5
     ), fill = "black", color = "black", linewidth = 1) +
     coord_fixed() +
