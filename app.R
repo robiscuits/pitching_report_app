@@ -10,6 +10,7 @@
 library(shiny)
 source("R/helpers.R")
 source("R/charts.R")
+source("R/tables.R")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
