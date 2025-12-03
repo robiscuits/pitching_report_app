@@ -14,6 +14,7 @@ This Shiny application provides an interactive postgame pitching report using pi
 ## File Structure
 
 - app.R : main Shiny application
+- run_app.R : one-line script to run the app
 - R/helpers.R : data loading, encoding fix, feature engineering
 - R/charts.R : movement, location, and release plots
 - R/tables.R : pitch characteristics and efficacy tables
@@ -28,8 +29,5 @@ This Shiny application provides an interactive postgame pitching report using pi
 
 ## Running the App
 
-In R:
-
-shiny::runApp()
-
+execute run_app.R
 Requires: shiny, tidyverse, ggplot2, DT
