@@ -1,7 +1,3 @@
----
-title: "README"
-output: html_document
----
 # Postgame Pitching Report (Shiny App)
 
 This Shiny application provides an interactive postgame pitching report using pitch-tracking data. Users can select a pitcher and view movement, location, and release plots, along with summary tables for pitch characteristics and pitch efficacy.
